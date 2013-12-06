@@ -51,7 +51,7 @@ module HTTP
       end
 
       opts.callbacks[:request].each { |c| c.call(request) }
-      response = perform request, opts
+      response = perform request, opts unless opts.follow
       opts.callbacks[:response].each { |c| c.call(response) }
 
       format_response method, response, opts.response
