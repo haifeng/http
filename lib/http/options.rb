@@ -1,5 +1,7 @@
 require 'socket'
-require 'openssl'
+# require 'openssl'
+require 'http/sockets/tcp'
+require 'http/sockets/ssl'
 
 module HTTP
   class Options
@@ -33,8 +35,10 @@ module HTTP
 
     protected :response=, :headers=, :proxy=, :form=,  :callbacks=, :follow=
 
-    @default_socket_class     = TCPSocket
-    @default_ssl_socket_class = OpenSSL::SSL::SSLSocket
+    # @default_socket_class     = TCPSocket
+    # @default_ssl_socket_class = OpenSSL::SSL::SSLSocket
+    @default_socket_class     = Sockets::TCP
+    @default_ssl_socket_class = Sockets::SSL
 
     class << self
       attr_accessor :default_socket_class, :default_ssl_socket_class
