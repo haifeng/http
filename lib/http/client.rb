@@ -88,7 +88,7 @@ module HTTP
             parser.chunk || ""
           end
 
-          @body_remaining -= chunk.length if @body_remaining
+          @body_remaining -= chunk.bytesize if @body_remaining
           @body_remaining = nil if @body_remaining && @body_remaining < 1
 
           chunk
