@@ -124,12 +124,12 @@ module HTTP
 
     # Parse the response body according to its content type
     def parse_body
-      raw_body = body
-
       encoding = @headers['Content-Encoding']
-      if encoding && encoding.downcase =~ /zip/
-        gz = Zlib::GzipReader.new(StringIO.new(raw_body), :external_encoding => raw_body.encoding)
-        return gz.read
+      raw_body = if encoding && encoding =~ /zip/i
+        gz = Zlib::GzipReader.new(StringIO.new(body), :external_encoding => body.encoding)
+        gz.read
+      else
+        body
       end
 
       if @headers['Content-Type']
