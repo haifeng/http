@@ -1,6 +1,5 @@
 require 'socket'
 require 'http/sockets/base'
-require 'pry'
 
 module Sockets
   SOCKET_HASH_KEY="HTTP::SOCKET_HASH"
