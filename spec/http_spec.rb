@@ -102,6 +102,13 @@ describe Http do
       res = client.get "#{test_endpoint}not-found"
       res.status.should == 404
     end
+
+    it "should respect Accept-Encoding" do
+      site = "http://techcrunch.com/2013/12/16/facebook-donate-now-button/"
+      resp = Http.with_headers('Accept-Encoding' => 'gzip, deflate').with_follow(true).with_response(:object).get site
+      resp.status.should == 200
+      resp.parse_body.should include('TechCrunch')
+    end
   end
 
   context "with http proxy address and port" do

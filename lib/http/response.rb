@@ -124,12 +124,20 @@ module HTTP
 
     # Parse the response body according to its content type
     def parse_body
-      if @headers['Content-Type']
-        mime_type = MimeType[@headers['Content-Type'].split(/;\s*/).first]
-        return mime_type.parse(body) if mime_type
+      raw_body = body
+
+      encoding = @headers['Content-Encoding']
+      if encoding && encoding.downcase =~ /zip/
+        gz = Zlib::GzipReader.new(StringIO.new(raw_body), :external_encoding => raw_body.encoding)
+        return gz.read
       end
 
-      body
+      if @headers['Content-Type']
+        mime_type = MimeType[@headers['Content-Type'].split(/;\s*/).first]
+        return mime_type.parse(raw_body) if mime_type
+      end
+
+      raw_body
     end
 
     # Returns an Array ala Rack: `[status, headers, body]`
