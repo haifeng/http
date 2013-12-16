@@ -26,8 +26,11 @@ module Sockets
 
       # timeout for connection
       timeout_val = [timeout, 0].pack("l_2")
+
       socket.setsockopt(Socket::SOL_SOCKET, Socket::SO_RCVTIMEO, timeout_val)
       socket.setsockopt(Socket::SOL_SOCKET, Socket::SO_SNDTIMEO, timeout_val)
+
+      socket.setsockopt(Socket::SOL_SOCKET, Socket::SO_KEEPALIVE, true)
 
       addr = sockaddr_in(port, host)
 
