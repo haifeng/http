@@ -35,7 +35,7 @@ module HTTP
 
       if opts.follow
         code = 302
-        while code == 302 or code == 301
+        while code == 302 or code == 301 or code == 307 or code == 308
           # if the uri isn't fully formed complete it
           if not uri.match /\./
             uri = "http://#{host}#{uri}"
