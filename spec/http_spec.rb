@@ -29,6 +29,42 @@ describe Http do
       end
     end
 
+    it "can get correct body size for some real world sites" do
+      sites = [
+        "http://github.com/",
+        "http://www.crunchbase.com/"
+      ]
+      sites.each do |site|
+        resp = Http.with_response(:object).with_follow(true).get site
+        resp.status.should == 200
+        resp.headers['Content-Length'].to_i.should == resp.body.bytesize
+      end
+    end
+
+    it "can allow urls with no empty path" do
+      site = "http://www.google.com"
+      resp = Http.with_response(:object).with_follow(true).get site
+      resp.status.should == 200
+      resp.body.length.should > 0
+    end
+
+    it "should share socket" do
+      sites = [
+        "http://s3.amazonaws.com/v3datax.pressly.com/52962ec7646f6d364b000000/asset/0_header.png",
+        "http://s3.amazonaws.com/v3datax.pressly.com/52962ec7646f6d364b000000/asset/0_header.png",
+        "http://s3.amazonaws.com/v3datax.pressly.com/52960b95646f6d79c3000000/asset/1385565078_header-logo-image.png",
+        "http://s3.amazonaws.com/v3datax.pressly.com/52960b95646f6d79c3000000/asset/1385565078_header-logo-image.png"
+      ]
+      sockets = []
+      sites.each do |site|
+        resp = Http.with_response(:object).with_follow(true).get site
+        resp.status.should == 200
+        resp.body.bytesize.should > 0
+        sockets << Thread.current['HTTP::SOCKET_HASH']['s3.amazonaws.com::80::10']
+      end
+      sockets.uniq.size.should == 1
+    end
+
     context "with_response" do
       it 'allows specifying :object' do
         res = Http.with_response(:object).get test_endpoint
