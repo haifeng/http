@@ -31,7 +31,7 @@ describe Http do
 
     it "can get correct body size for some real world sites" do
       sites = [
-        "http://github.com/",
+        "https://github.com/",
         "http://www.crunchbase.com/"
       ]
       sites.each do |site|
